@@ -1,0 +1,4 @@
+body { background-image: url(../images/image.png); }
+body { background-image: url(/images/image.png); }
+body { background-image: url('/images/image.png'); }
+body { background-image: url("/images/image.png"); }
