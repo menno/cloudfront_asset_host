@@ -55,7 +55,12 @@ module CloudfrontAssetHost
 
       if source && request && CloudfrontAssetHost.gzip
         gzip_allowed  = CloudfrontAssetHost.gzip_allowed_for_source?(source)
-        gzip_accepted = !(request.headers['User-Agent'].to_s =~ /(Mozilla\/4\.0[678])|(MSIE\s[1-6])/) && request.headers['Accept-Encoding'].to_s.include?('gzip')
+
+        # Only Netscape 4 does not support gzip
+        # IE masquerades as Netscape 4, so we check that as well
+        user_agent = request.headers['User-Agent'].to_s
+        gzip_accepted = !(user_agent =~ /^Mozilla\/4/) || user_agent =~ /\bMSIE/
+        gzip_accepted &&= request.headers['Accept-Encoding'].to_s.include?('gzip')
 
         if gzip_accepted && gzip_allowed
           host << "/#{CloudfrontAssetHost.gzip_prefix}"
