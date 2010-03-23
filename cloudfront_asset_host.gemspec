@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cloudfront_asset_host}
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Menno van der Sman"]
-  s.date = %q{2010-03-18}
+  s.date = %q{2010-03-23}
   s.description = %q{Easy deployment of your assets on CloudFront or S3 using a simple rake-task. When enabled in production, the application's asset_host and public_paths will point to the correct location.}
   s.email = %q{menno@wakoopa.com}
   s.extra_rdoc_files = [
