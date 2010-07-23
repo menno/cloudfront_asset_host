@@ -109,7 +109,7 @@ class UploaderTest < Test::Unit::TestCase
       contents = File.read(path)
 
       gz_path = CloudfrontAssetHost::Uploader.gzipped_path(path)
-      gunzip_contents = `gunzip #{gz_path} -q -c`
+      gunzip_contents = `gunzip '#{gz_path}' -q -c`
 
       assert_equal contents, gunzip_contents
     end

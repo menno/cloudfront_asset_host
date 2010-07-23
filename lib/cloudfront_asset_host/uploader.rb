@@ -49,7 +49,7 @@ module CloudfrontAssetHost
 
       def gzipped_path(path)
         tmp = Tempfile.new("cfah-gz")
-        `gzip #{path} -q -c > #{tmp.path}`
+        `gzip '#{path}' -q -c > '#{tmp.path}'`
         tmp.path
       end
 
