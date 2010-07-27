@@ -43,6 +43,7 @@ module CloudfrontAssetHost
 
       def should_upload?(key, options={})
         return false if CloudfrontAssetHost.disable_cdn_for_source?(key)
+        return true  if CloudfrontAssetHost.css?(key) && rewrite_all_css?
 
         options[:force_write] || !existing_keys.include?(key)
       end
@@ -54,7 +55,7 @@ module CloudfrontAssetHost
       end
 
       def rewritten_css_path(path)
-        if File.extname(path) == '.css'
+        if CloudfrontAssetHost.css?(path)
           tmp = CloudfrontAssetHost::CssRewriter.rewrite_stylesheet(path)
           tmp.path
         else
@@ -82,6 +83,10 @@ module CloudfrontAssetHost
 
           result
         end
+      end
+
+      def rewrite_all_css?
+        @rewrite_all_css ||= !keys_with_paths.delete_if { |key, path| existing_keys.include?(key) || !CloudfrontAssetHost.image?(path) }.empty?
       end
 
       def existing_keys
@@ -114,7 +119,11 @@ module CloudfrontAssetHost
       end
 
       def bucket
-        @bucket ||= s3.bucket(CloudfrontAssetHost.bucket)
+        @bucket ||= begin
+          bucket = s3.bucket(CloudfrontAssetHost.bucket)
+          bucket.disable_logging unless CloudfrontAssetHost.s3_logging
+          bucket
+        end
       end
 
       def s3
