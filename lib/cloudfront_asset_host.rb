@@ -34,6 +34,9 @@ module CloudfrontAssetHost
   # Key-prefix under which to store gzipped assets
   mattr_accessor :gzip_prefix
 
+  # Key-prefix under which to store plain (unzipped) assets
+  mattr_accessor :plain_prefix
+
   # Which extensions are likely to occur in css files
   mattr_accessor :image_extensions
 
@@ -60,6 +63,8 @@ module CloudfrontAssetHost
       self.gzip            = true
       self.gzip_extensions = %w(js css)
       self.gzip_prefix     = "gz"
+
+      self.plain_prefix = ""
 
       self.image_extensions = %w(jpg jpeg gif png)
 
@@ -93,7 +98,11 @@ module CloudfrontAssetHost
 
         if gzip_accepted && gzip_allowed
           host << "/#{CloudfrontAssetHost.gzip_prefix}"
+        else
+          host << "/#{CloudfrontAssetHost.plain_prefix}" if CloudfrontAssetHost.plain_prefix.present?
         end
+      else
+        host << "/#{CloudfrontAssetHost.plain_prefix}" if CloudfrontAssetHost.plain_prefix.present?
       end
 
       host

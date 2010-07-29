@@ -2,7 +2,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 
-require 'activesupport'
+require 'active_support'
 require 'action_controller'
 
 require 'test/unit'
@@ -21,6 +21,10 @@ module Rails
 
     def public_path
       File.join(RAILS_ROOT, 'public')
+    end
+
+    def env
+      "production"
     end
   end
 end

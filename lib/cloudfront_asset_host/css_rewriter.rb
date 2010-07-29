@@ -34,7 +34,7 @@ module CloudfrontAssetHost
 
           if path.present? && File.exists?(path)
             key = CloudfrontAssetHost.key_for_path(path) + path.gsub(Rails.public_path, '')
-            "url(#{CloudfrontAssetHost.asset_host}/#{key})"
+            "url(#{CloudfrontAssetHost.asset_host(url)}/#{key})"
           else
             puts "Could not extract path: #{path}"
             asset_link

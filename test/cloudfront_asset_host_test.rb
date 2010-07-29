@@ -60,6 +60,11 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
         assert_equal "http://bucketname.s3.amazonaws.com", CloudfrontAssetHost.asset_host(@source)
       end
 
+      should "add plain_prefix if present" do
+        CloudfrontAssetHost.plain_prefix = "prefix"
+        assert_equal "http://assethost.com/prefix", CloudfrontAssetHost.asset_host(@source)
+      end
+
       context "when taking the headers into account" do
 
         should "not support gzip for images" do
@@ -145,4 +150,5 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
     end
     assert_equal %w(custom), CloudfrontAssetHost.asset_dirs
   end
+
 end

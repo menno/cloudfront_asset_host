@@ -1,0 +1,6 @@
+#!/bin/bash
+production:
+  access_key_id: 'access_key'
+  secret_access_key: 'secret'
+  options:
+    use_ssl: true

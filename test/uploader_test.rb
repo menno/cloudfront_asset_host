@@ -21,6 +21,17 @@ class UploaderTest < Test::Unit::TestCase
       assert_equal 'secret', config['secret_access_key']
     end
 
+    should "be able to retrieve enviroment-specific config" do
+      CloudfrontAssetHost.configure do |config|
+        config.enabled = false
+        config.bucket = "bucketname"
+        config.s3_config = "#{RAILS_ROOT}/config/s3-env.yml"
+      end
+      config = CloudfrontAssetHost::Uploader.config
+      assert_equal 'access_key', config['access_key_id']
+      assert_equal 'secret', config['secret_access_key']
+    end
+
     should "be able to instantiate s3-interface" do
       RightAws::S3.expects(:new).with('access_key', 'secret').returns(mock)
       assert_not_nil CloudfrontAssetHost::Uploader.s3
