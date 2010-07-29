@@ -26,7 +26,7 @@ Include the gem in your app's `environment.rb` or `Gemfile`.
 
 ### Dependencies
 
-The gem relies on `openssl md5` and `gzip` utilities. Make sure they are available locally and on your servers.
+The gem relies on `gzip` utility. Make sure it is available locally and on your servers.
 
 ### Configuration
 
@@ -34,6 +34,12 @@ Make sure your s3-credentials are stored in _config/s3.yml_ like this:
 
     access_key_id: 'access_key'
     secret_access_key: 'secret'
+    
+or with environment specified:
+    
+    production:
+      access_key_id: 'access_key'
+      secret_access_key: 'secret'
 
 Create an initializer to configure the plugin _config/initializers/cloudfront_asset_host.rb_
 
@@ -45,10 +51,11 @@ Create an initializer to configure the plugin _config/initializers/cloudfront_as
 
     # Extended configuration
     CloudfrontAssetHost.configure do |config|
-      config.bucket     = "bucketname"        # required
-      config.cname      = "assets.domain.com" # if you have a cname configured for your distribution or bucket
-      config.key_prefix = "app/"              # if you share the bucket and want to keep things separated
-      config.s3_config  = "#{RAILS_ROOT}/config/s3.yml" # Alternative location of your s3-config file
+      config.bucket       = "bucketname"        # required
+      config.cname        = "assets.domain.com" # if you have a cname configured for your distribution or bucket
+      config.key_prefix   = "app/"              # if you share the bucket and want to keep things separated
+      config.plain_prefix = ""                  # prefix for paths to uncompressed files 
+      config.s3_config    = "#{RAILS_ROOT}/config/s3.yml" # Alternative location of your s3-config file
 
       # gzip related configuration
       config.gzip = true                      # enable gzipped assets (defaults to true)
@@ -57,6 +64,8 @@ Create an initializer to configure the plugin _config/initializers/cloudfront_as
 
       config.enabled = true if Rails.env.production? # only enable in production
     end
+    
+The _cname_ config options also accepts Proc or string with the "%d" parameter (e.g. "http://assets%d.example.com" for multiple hosts).
 
 ## Usage
 
@@ -72,10 +81,6 @@ When using in combination with SASS and/or asset_packager it is recommended to g
 ## Contributing
 
 Feel free to fork the project and send pull-requests.
-
-## Known Limitations
-
- - Does not delete old assets
 
 ## Compatibility
 
