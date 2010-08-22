@@ -29,6 +29,10 @@ module CloudfrontAssetHost
   # Key-prefix under which to store gzipped assets
   mattr_accessor :gzip_prefix
 
+  # Directories to search for asset files in
+  mattr_accessor :asset_dirs
+
+
   class << self
 
     def configure
@@ -38,6 +42,8 @@ module CloudfrontAssetHost
       self.key_prefix = ""
       self.s3_config  = "#{RAILS_ROOT}/config/s3.yml"
       self.enabled    = false
+
+      self.asset_dirs = "images,javascripts,stylesheets"
 
       self.gzip            = true
       self.gzip_extensions = %w(js css)

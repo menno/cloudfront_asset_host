@@ -6,7 +6,6 @@ class UploaderTest < Test::Unit::TestCase
     setup do
       @css_md5 = CloudfrontAssetHost.send(:md5sum, 'test/app/public/stylesheets/style.css')[0..8]       #7026e6ce3
       @js_md5 =  CloudfrontAssetHost.send(:md5sum, 'test/app/public/javascripts/application.js')[0..8]  #8ed41cb87
-
       CloudfrontAssetHost.configure do |config|
         config.cname  = "assethost.com"
         config.bucket = "bucketname"
@@ -112,5 +111,4 @@ class UploaderTest < Test::Unit::TestCase
     end
 
   end
-
 end

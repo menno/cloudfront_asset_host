@@ -87,7 +87,7 @@ module CloudfrontAssetHost
       end
 
       def current_paths
-        @current_paths ||= Dir.glob("#{Rails.public_path}/{images,javascripts,stylesheets}/**/*").reject { |path| File.directory?(path) }
+        @current_paths ||= Dir.glob("#{Rails.public_path}/{#{ asset_dirs }}/**/*").reject { |path| File.directory?(path) }
       end
 
       def headers_for_path(extension, gzip = false)
@@ -116,6 +116,10 @@ module CloudfrontAssetHost
 
       def config
         @config ||= YAML::load_file(CloudfrontAssetHost.s3_config)
+      end
+
+      def asset_dirs
+        @asset_dirs ||= CloudfrontAssetHost.asset_dirs
       end
 
     end

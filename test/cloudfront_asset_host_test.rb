@@ -31,6 +31,10 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
       assert_equal "prefix/8ed41cb87", CloudfrontAssetHost.key_for_path(File.join(RAILS_ROOT, 'public', 'javascripts', 'application.js'))
     end
 
+    should "default asset_dirs setting" do
+      assert_equal "images,javascripts,stylesheets", CloudfrontAssetHost.asset_dirs
+    end
+
     context "asset-host" do
 
       setup do
@@ -124,4 +128,11 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
     end
   end
 
+  should "respect custom asset_dirs" do
+    CloudfrontAssetHost.configure do |config|
+      config.bucket = "bucketname"
+      config.asset_dirs  = "custom"
+    end
+    assert_equal "custom", CloudfrontAssetHost.asset_dirs
+  end
 end
