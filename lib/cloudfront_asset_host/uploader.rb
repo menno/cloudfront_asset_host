@@ -7,25 +7,24 @@ module CloudfrontAssetHost
     class << self
 
       def upload!(options = {})
-        dryrun = options.delete(:dryrun) || false
-        verbose = options.delete(:verbose) || false
-
-        puts "-- Updating uncompressed files" if verbose
-        upload_keys_with_paths(keys_with_paths, dryrun, verbose, false)
+        puts "-- Updating uncompressed files" if options[:verbose]
+        upload_keys_with_paths(keys_with_paths, options)
 
         if CloudfrontAssetHost.gzip
-          puts "-- Updating compressed files" if verbose
-          upload_keys_with_paths(gzip_keys_with_paths, dryrun, verbose, true)
+          puts "-- Updating compressed files" if options[:verbose]
+          upload_keys_with_paths(gzip_keys_with_paths, options.merge(:gzip => true))
         end
 
         @existing_keys = nil
       end
 
-      def upload_keys_with_paths(keys_paths, dryrun, verbose, gzip)
+      def upload_keys_with_paths(keys_paths, options={})
+        gzip = options.delete(:gzip) || false
+        dryrun = options.delete(:dryrun) || false
+        verbose = options.delete(:verbose) || false
+
         keys_paths.each do |key, path|
-          if existing_keys.include?(key)
-            puts "= #{key}" if verbose
-          else
+          if should_upload?(key, options)
             puts "+ #{key}" if verbose
 
             extension = File.extname(path)[1..-1]
@@ -36,8 +35,14 @@ module CloudfrontAssetHost
             bucket.put(key, File.read(data_path), {}, 'public-read', headers_for_path(extension, gzip)) unless dryrun
 
             File.unlink(data_path) if gzip && File.exists?(data_path)
+          else
+            puts "= #{key}" if verbose
           end
         end
+      end
+
+      def should_upload?(key, options={})
+        options[:force_write] || !existing_keys.include?(key)
       end
 
       def gzipped_path(path)

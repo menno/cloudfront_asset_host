@@ -4,8 +4,8 @@ class UploaderTest < Test::Unit::TestCase
 
   context "A configured uploader" do
     setup do
-      @css_md5 = CloudfrontAssetHost.send(:md5sum, 'test/app/public/stylesheets/style.css')[0..8]       #7026e6ce3
-      @js_md5 =  CloudfrontAssetHost.send(:md5sum, 'test/app/public/javascripts/application.js')[0..8]  #8ed41cb87
+      @css_md5 = md5_key('stylesheets/style.css')       #7026e6ce3
+      @js_md5 =  md5_key('javascripts/application.js')  #8ed41cb87
       CloudfrontAssetHost.configure do |config|
         config.cname  = "assethost.com"
         config.bucket = "bucketname"
@@ -80,7 +80,7 @@ class UploaderTest < Test::Unit::TestCase
       CloudfrontAssetHost::Uploader.upload!
     end
 
-    should "not re-upload existing keys" do
+    should "not re-upload existing keys by default" do
       CloudfrontAssetHost::Uploader.expects(:bucket).never
       CloudfrontAssetHost::Uploader.stubs(:existing_keys).returns(
         ["gz/#{@js_md5}/javascripts/application.js", "#{@js_md5}/javascripts/application.js",
@@ -89,6 +89,19 @@ class UploaderTest < Test::Unit::TestCase
       )
 
       CloudfrontAssetHost::Uploader.upload!
+    end
+
+    should "re-upload existing keys w/ force_write" do
+      bucket_mock = mock
+      bucket_mock.expects(:put).times(5)
+      CloudfrontAssetHost::Uploader.stubs(:bucket).returns(bucket_mock)
+      CloudfrontAssetHost::Uploader.stubs(:existing_keys).returns(
+        ["gz/#{@js_md5}/javascripts/application.js", "#{@js_md5}/javascripts/application.js",
+         "d41d8cd98/images/image.png",
+         "#{@css_md5}/stylesheets/style.css", "gz/#{@css_md5}/stylesheets/style.css"]
+      )
+
+      CloudfrontAssetHost::Uploader.upload!(:force_write => true)
     end
 
     should "correctly gzip files" do
@@ -110,5 +123,9 @@ class UploaderTest < Test::Unit::TestCase
       end
     end
 
+  end
+
+  def md5_key(path)
+    CloudfrontAssetHost.send(:md5sum, File.join('test/app/public', path))[0..8]
   end
 end
