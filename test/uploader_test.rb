@@ -4,6 +4,9 @@ class UploaderTest < Test::Unit::TestCase
 
   context "A configured uploader" do
     setup do
+      @css_md5 = CloudfrontAssetHost.send(:md5sum, 'test/app/public/stylesheets/style.css')[0..8]       #7026e6ce3
+      @js_md5 =  CloudfrontAssetHost.send(:md5sum, 'test/app/public/javascripts/application.js')[0..8]  #8ed41cb87
+
       CloudfrontAssetHost.configure do |config|
         config.cname  = "assethost.com"
         config.bucket = "bucketname"
@@ -31,14 +34,14 @@ class UploaderTest < Test::Unit::TestCase
     should "calculate keys for paths" do
       keys_with_paths = CloudfrontAssetHost::Uploader.keys_with_paths
       assert_equal 3, keys_with_paths.length
-      assert_match %r{/test/app/public/javascripts/application\.js$}, keys_with_paths["8ed41cb87/javascripts/application.js"]
+      assert_match %r{/test/app/public/javascripts/application\.js$}, keys_with_paths["#{@js_md5}/javascripts/application.js"]
     end
 
     should "calculate gzip keys for paths" do
       gz_keys_with_paths = CloudfrontAssetHost::Uploader.gzip_keys_with_paths
       assert_equal 2, gz_keys_with_paths.length
-      assert_match %r{/test/app/public/javascripts/application\.js$}, gz_keys_with_paths["gz/8ed41cb87/javascripts/application.js"]
-      assert_match %r{/test/app/public/stylesheets/style\.css$},      gz_keys_with_paths["gz/bd258f13d/stylesheets/style.css"]
+      assert_match %r{/test/app/public/javascripts/application\.js$}, gz_keys_with_paths["gz/#{@js_md5}/javascripts/application.js"]
+      assert_match %r{/test/app/public/stylesheets/style\.css$},      gz_keys_with_paths["gz/#{@css_md5}/stylesheets/style.css"]
     end
 
     should "return a mimetype for an extension" do
@@ -81,9 +84,9 @@ class UploaderTest < Test::Unit::TestCase
     should "not re-upload existing keys" do
       CloudfrontAssetHost::Uploader.expects(:bucket).never
       CloudfrontAssetHost::Uploader.stubs(:existing_keys).returns(
-        ["gz/8ed41cb87/javascripts/application.js", "8ed41cb87/javascripts/application.js",
+        ["gz/#{@js_md5}/javascripts/application.js", "#{@js_md5}/javascripts/application.js",
          "d41d8cd98/images/image.png",
-         "bd258f13d/stylesheets/style.css", "gz/bd258f13d/stylesheets/style.css"]
+         "#{@css_md5}/stylesheets/style.css", "gz/#{@css_md5}/stylesheets/style.css"]
       )
 
       CloudfrontAssetHost::Uploader.upload!

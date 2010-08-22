@@ -9,7 +9,7 @@ module CloudfrontAssetHost
 
     class << self
       # matches optional quoted url(<path>)
-      ReplaceRexeg = /url\(["']?([^\)"']+)["']?\)/i
+      ReplaceRexeg = /url\(["']?([^\)\?"']+)(\?[^"']*)?["']?\)/i
 
       # Returns the path to the temporary file that contains the
       # rewritten stylesheet
