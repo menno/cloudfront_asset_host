@@ -1,3 +1,4 @@
+require 'digest/md5'
 require 'cloudfront_asset_host/asset_tag_helper_ext'
 
 module CloudfrontAssetHost
@@ -106,7 +107,7 @@ module CloudfrontAssetHost
     end
 
     def md5sum(path)
-      `openssl md5 #{path}`.split(/\s/)[1].to_s
+      Digest::MD5.hexdigest(File.read(path))
     end
 
   end
