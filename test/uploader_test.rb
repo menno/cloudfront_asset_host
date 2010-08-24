@@ -125,6 +125,30 @@ class UploaderTest < Test::Unit::TestCase
 
   end
 
+  context 'with exclude_pattern' do
+    setup do
+      @css_md5 = md5_key('stylesheets/style.css')       #7026e6ce3
+      @js_md5 =  md5_key('javascripts/application.js')  #8ed41cb87
+      CloudfrontAssetHost.configure do |config|
+        config.cname  = "assethost.com"
+        config.bucket = "bucketname"
+        config.key_prefix = ""
+        config.s3_config = "#{RAILS_ROOT}/config/s3.yml"
+        config.enabled = false
+        config.exclude_pattern = /style/
+      end
+    end
+
+    should "filter keys out" do
+      bucket_mock = mock
+      bucket_mock.expects(:put).times(3)
+      CloudfrontAssetHost::Uploader.stubs(:bucket).returns(bucket_mock)
+      CloudfrontAssetHost::Uploader.stubs(:existing_keys).returns([])
+
+      CloudfrontAssetHost::Uploader.upload!
+    end
+  end
+
   def md5_key(path)
     CloudfrontAssetHost.send(:md5sum, File.join('test/app/public', path))[0..8]
   end

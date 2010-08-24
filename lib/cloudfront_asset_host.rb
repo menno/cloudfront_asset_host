@@ -33,6 +33,9 @@ module CloudfrontAssetHost
   # Directories to search for asset files in
   mattr_accessor :asset_dirs
 
+  # Key Regular Expression to filter out/exclude content
+  mattr_accessor :exclude_pattern
+
 
   class << self
 
@@ -45,6 +48,7 @@ module CloudfrontAssetHost
       self.enabled    = false
 
       self.asset_dirs = "images,javascripts,stylesheets"
+      self.exclude_pattern = nil
 
       self.gzip            = true
       self.gzip_extensions = %w(js css)
@@ -58,6 +62,8 @@ module CloudfrontAssetHost
     end
 
     def asset_host(source = nil, request = nil)
+      return '' if source && disable_cdn_for_source?(source)
+
       host = cname.present? ? "http://#{self.cname}" : "http://#{self.bucket_host}"
 
       if source && request && CloudfrontAssetHost.gzip
@@ -96,6 +102,10 @@ module CloudfrontAssetHost
     def gzip_allowed_for_source?(source)
       extension = source.split('.').last
       CloudfrontAssetHost.gzip_extensions.include?(extension)
+    end
+
+    def disable_cdn_for_source?(source)
+      source.match(exclude_pattern) if exclude_pattern.present?
     end
 
   private
