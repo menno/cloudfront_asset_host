@@ -19,9 +19,9 @@ module CloudfrontAssetHost
       end
 
       def upload_keys_with_paths(keys_paths, options={})
-        gzip = options.delete(:gzip) || false
-        dryrun = options.delete(:dryrun) || false
-        verbose = options.delete(:verbose) || false
+        gzip = options[:gzip] || false
+        dryrun = options[:dryrun] || false
+        verbose = options[:verbose] || false
 
         keys_paths.each do |key, path|
           if should_upload?(key, options)
