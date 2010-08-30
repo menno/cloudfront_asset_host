@@ -45,6 +45,11 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
         assert_equal "http://assethost.com", CloudfrontAssetHost.asset_host(@source)
       end
 
+      should "use interpolated cname for asset_host" do
+        CloudfrontAssetHost.cname = "assethost-%d.com"
+        assert_equal "http://assethost-3.com", CloudfrontAssetHost.asset_host(@source)
+      end
+
       should "use bucket_host when cname is not present" do
         CloudfrontAssetHost.cname = nil
         assert_equal "http://bucketname.s3.amazonaws.com", CloudfrontAssetHost.asset_host(@source)
