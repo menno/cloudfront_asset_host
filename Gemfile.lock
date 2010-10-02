@@ -1,0 +1,40 @@
+PATH
+  remote: .
+  specs:
+    cloudfront_asset_host (1.0.2)
+      right_aws
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    actionpack (2.3.9)
+      activesupport (= 2.3.9)
+      rack (~> 1.1.0)
+    activesupport (2.3.9)
+    ansi (1.2.2)
+    facets (2.8.4)
+    mocha (0.9.8)
+      rake
+    rack (1.1.0)
+    rake (0.8.7)
+    redgreen (1.2.2)
+    right_aws (2.0.0)
+      right_http_connection (>= 1.2.1)
+    right_http_connection (1.2.4)
+    shoulda (2.11.3)
+    turn (0.7.0)
+      ansi (>= 1.1.0)
+      facets (>= 2.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  actionpack (= 2.3.9)
+  activesupport (= 2.3.9)
+  cloudfront_asset_host!
+  mocha
+  redgreen
+  right_aws
+  shoulda
+  turn

@@ -32,6 +32,12 @@ begin
     gemspec.homepage = "http://github.com/menno/cloudfront_asset_host"
     gemspec.authors = ["Menno van der Sman"]
     gemspec.add_dependency 'right_aws'
+    gemspec.add_development_dependency 'activesupport', '2.3.9'
+    gemspec.add_development_dependency 'actionpack', '2.3.9'
+    gemspec.add_development_dependency 'shoulda'
+    gemspec.add_development_dependency 'mocha'
+    gemspec.add_development_dependency 'redgreen'
+    gemspec.add_development_dependency 'turn'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

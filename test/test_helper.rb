@@ -1,9 +1,11 @@
-require 'test/unit'
 require 'rubygems'
+require 'bundler'
+Bundler.setup
 
+require 'activesupport'
 require 'action_controller'
-require 'right_aws'
 
+require 'test/unit'
 require 'shoulda'
 require 'mocha'
 begin require 'redgreen'; rescue LoadError; end
