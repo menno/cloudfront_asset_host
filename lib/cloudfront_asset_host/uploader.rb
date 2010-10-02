@@ -94,7 +94,7 @@ module CloudfrontAssetHost
       end
 
       def current_paths
-        @current_paths ||= Dir.glob("#{Rails.public_path}/{#{ asset_dirs }}/**/*").reject { |path| File.directory?(path) }
+        @current_paths ||= Dir.glob("#{Rails.public_path}/{#{asset_dirs.join(',')}}/**/*").reject { |path| File.directory?(path) }
       end
 
       def headers_for_path(extension, gzip = false)

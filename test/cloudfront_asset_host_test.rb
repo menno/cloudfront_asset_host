@@ -32,13 +32,13 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
     end
 
     should "default asset_dirs setting" do
-      assert_equal "images,javascripts,stylesheets", CloudfrontAssetHost.asset_dirs
+      assert_equal %w(images javascripts stylesheets), CloudfrontAssetHost.asset_dirs
     end
 
     context "asset-host" do
 
       setup do
-        @source  = "/javascripts/application.js"
+        @source = "/javascripts/application.js"
       end
 
       should "use cname for asset_host" do
@@ -136,8 +136,8 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
   should "respect custom asset_dirs" do
     CloudfrontAssetHost.configure do |config|
       config.bucket = "bucketname"
-      config.asset_dirs  = "custom"
+      config.asset_dirs = %w(custom)
     end
-    assert_equal "custom", CloudfrontAssetHost.asset_dirs
+    assert_equal %w(custom), CloudfrontAssetHost.asset_dirs
   end
 end
