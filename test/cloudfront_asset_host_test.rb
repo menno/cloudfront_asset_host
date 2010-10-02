@@ -55,13 +55,13 @@ class CloudfrontAssetHostTest < Test::Unit::TestCase
         assert_equal "http://bucketname.s3.amazonaws.com", CloudfrontAssetHost.asset_host(@source)
       end
 
-      should "not support gzip for images" do
-        request = stub(:headers => {'User-Agent' => 'Mozilla/5.0', 'Accept-Encoding' => 'gzip, compress'})
-        source  = "/images/logo.png"
-        assert_equal "http://assethost.com", CloudfrontAssetHost.asset_host(source, request)
-      end
-
       context "when taking the headers into account" do
+
+        should "not support gzip for images" do
+          request = stub(:headers => {'User-Agent' => 'Mozilla/5.0', 'Accept-Encoding' => 'gzip, compress'})
+          source  = "/images/logo.png"
+          assert_equal "http://assethost.com", CloudfrontAssetHost.asset_host(source, request)
+        end
 
         should "support gzip for IE" do
           request = stub(:headers => {'User-Agent' => 'Mozilla/4.0 (compatible; MSIE 8.0)', 'Accept-Encoding' => 'gzip, compress'})
