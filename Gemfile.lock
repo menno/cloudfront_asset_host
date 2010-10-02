@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cloudfront_asset_host (1.0.2)
+    cloudfront_asset_host (1.1.0)
       right_aws
 
 GEM

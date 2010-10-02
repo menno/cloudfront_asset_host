@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cloudfront_asset_host}
-  s.version = "1.0.2"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Menno van der Sman"]
@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/cloudfront_asset_host/css_rewriter.rb",
      "lib/cloudfront_asset_host/mime_types.yml",
      "lib/cloudfront_asset_host/uploader.rb",
+     "test/app/config/s3-env.yml",
      "test/app/config/s3.yml",
      "test/app/public/images/image.png",
      "test/app/public/javascripts/application.js",
